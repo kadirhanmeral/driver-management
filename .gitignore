@@ -1,0 +1,62 @@
+# =========================
+# Go
+# =========================
+/bin/
+/obj/
+/pkg/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+
+# GoLand veya VSCode dosyaları
+.idea/
+.vscode/
+
+# =========================
+# Node / Frontend (opsiyonel)
+# =========================
+node_modules/
+dist/
+build/
+
+# =========================
+# Docker
+# =========================
+*.env
+docker-compose.override.yml
+**/Dockerfile.*
+
+# =========================
+# macOS
+# =========================
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+*.log.*
+
+# =========================
+# Temporary / OS Files
+# =========================
+*.swp
+*.tmp
+*.bak
+*.old
+
+# =========================
+# Misc
+# =========================
+*.sqlite
+*.db
+*.pem
+*.key
