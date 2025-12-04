@@ -27,7 +27,6 @@ build/
 # =========================
 # Docker
 # =========================
-*.env
 docker-compose.override.yml
 **/Dockerfile.*
 
