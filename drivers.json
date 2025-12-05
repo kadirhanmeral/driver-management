@@ -1,0 +1,22 @@
+[
+  {"firstName":"Mehmet","lastName":"Kara","plate":"34ABC123","taxiType":"sari","carBrand":"Toyota","carModel":"Corolla","lat":41.007,"lon":28.985},
+  {"firstName":"Ahmet","lastName":"Yılmaz","plate":"34XYZ452","taxiType":"sari","carBrand":"Renault","carModel":"Megane","lat":41.012,"lon":28.990},
+  {"firstName":"Mustafa","lastName":"Demir","plate":"34KLM678","taxiType":"siyah","carBrand":"Hyundai","carModel":"i20","lat":41.015,"lon":28.975},
+  {"firstName":"Ali","lastName":"Çelik","plate":"34QWE901","taxiType":"siyah","carBrand":"Mercedes","carModel":"C200","lat":41.020,"lon":28.980},
+  {"firstName":"Burak","lastName":"Aydın","plate":"34RTY234","taxiType":"sari","carBrand":"Fiat","carModel":"Egea","lat":41.009,"lon":28.992},
+  {"firstName":"Can","lastName":"Kurt","plate":"34FGH345","taxiType":"sari","carBrand":"Skoda","carModel":"Superb","lat":41.017,"lon":28.981},
+  {"firstName":"Emre","lastName":"Öztürk","plate":"34PLM556","taxiType":"sari","carBrand":"Honda","carModel":"Civic","lat":41.003,"lon":28.979},
+  {"firstName":"Serkan","lastName":"Aslan","plate":"34BNM777","taxiType":"siyah","carBrand":"BMW","carModel":"320i","lat":41.011,"lon":28.983},
+  {"firstName":"Kerem","lastName":"Güneş","plate":"34JKL888","taxiType":"sari","carBrand":"Volkswagen","carModel":"Passat","lat":41.019,"lon":28.998},
+  {"firstName":"Tolga","lastName":"Kara","plate":"34OPR999","taxiType":"sari","carBrand":"Toyota","carModel":"Yaris","lat":41.006,"lon":28.972},
+  {"firstName":"Furkan","lastName":"Kaplan","plate":"34AAA000","taxiType":"siyah","carBrand":"Audi","carModel":"A4","lat":41.018,"lon":28.987},
+  {"firstName":"Kaan","lastName":"Arslan","plate":"34EEE111","taxiType":"sari","carBrand":"Hyundai","carModel":"Accent","lat":41.013,"lon":28.976},
+  {"firstName":"Oğuz","lastName":"Yalçın","plate":"34TTT222","taxiType":"sari","carBrand":"Renault","carModel":"Clio","lat":41.014,"lon":28.982},
+  {"firstName":"Batuhan","lastName":"Şahin","plate":"34RRR333","taxiType":"siyah","carBrand":"Mercedes","carModel":"E200","lat":41.021,"lon":28.991},
+  {"firstName":"Umut","lastName":"Er","plate":"34YYY444","taxiType":"siyah","carBrand":"Skoda","carModel":"Octavia","lat":41.016,"lon":28.986},
+  {"firstName":"Mert","lastName":"Aksoy","plate":"34UUU555","taxiType":"sari","carBrand":"Fiat","carModel":"Linea","lat":41.008,"lon":28.978},
+  {"firstName":"Yusuf","lastName":"Polat","plate":"34PPP666","taxiType":"sari","carBrand":"Honda","carModel":"City","lat":41.010,"lon":28.999},
+  {"firstName":"Gökhan","lastName":"Kaya","plate":"34SSS777","taxiType":"siyah","carBrand":"BMW","carModel":"520d","lat":41.005,"lon":28.984},
+  {"firstName":"Efe","lastName":"Gür","plate":"34ZZZ888","taxiType":"sari","carBrand":"Hyundai","carModel":"i10","lat":41.022,"lon":28.994},
+  {"firstName":"Barış","lastName":"Deniz","plate":"34MMM999","taxiType":"sari","carBrand":"Toyota","carModel":"Auris","lat":41.004,"lon":28.977}
+]

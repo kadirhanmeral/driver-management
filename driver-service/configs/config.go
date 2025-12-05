@@ -33,7 +33,7 @@ func NewConfig() *Config {
 
 	return &Config{
 		Server: ServerConfig{
-			Address: getEnvOrDefault("SERVER_ADDRESS", ":8080"),
+			Address: getEnvOrDefault("SERVER_ADDRESS", ":8081"),
 		},
 		Database: MongoConfig{
 			URI:      mongoURI,

@@ -15,7 +15,8 @@ import (
 // DriverRepository interface
 type DriverRepository interface {
 	Create(driver entities.Driver, ctx context.Context) (primitive.ObjectID, error)
-	FindByParams(minLat, maxLat, minLon, maxLon *float64, taxiType *string, page, pageSize *int, ctx context.Context) ([]*entities.Driver, error)
+	FindByParamsNearby(minLat, maxLat, minLon, maxLon *float64, taxiType *string, ctx context.Context) ([]*entities.Driver, error)
+	FindByParams(page, pageSize *int, ctx context.Context) ([]*entities.Driver, error)
 	GetByID(id primitive.ObjectID, ctx context.Context) (*entities.Driver, error)
 	Update(id primitive.ObjectID, update bson.M, ctx context.Context) error
 	Delete(id primitive.ObjectID, ctx context.Context) (int64, error)
@@ -45,10 +46,9 @@ func (r *mongoDriverRepository) Create(driver entities.Driver, ctx context.Conte
 }
 
 // FindByParams finds drivers based on location and taxi type with pagination
-func (r *mongoDriverRepository) FindByParams(
+func (r *mongoDriverRepository) FindByParamsNearby(
 	minLat, maxLat, minLon, maxLon *float64,
 	taxiType *string,
-	page, pageSize *int,
 	ctx context.Context,
 ) ([]*entities.Driver, error) {
 
@@ -89,9 +89,6 @@ func (r *mongoDriverRepository) FindByParams(
 		"lastName":  1,
 		"plate":     1,
 		"location":  1,
-		"taxiType":  1,
-		"carBrand":  1,
-		"carModel":  1,
 	}
 
 	findOptions := options.Find()
@@ -99,10 +96,38 @@ func (r *mongoDriverRepository) FindByParams(
 	// Projection set
 	findOptions.SetProjection(projection)
 
-	// Pagination varsa uygula
+	cursor, err := r.collection.Find(ctx, filter, findOptions)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var drivers []*entities.Driver
+	for cursor.Next(ctx) {
+		var d entities.Driver
+		if err := cursor.Decode(&d); err != nil {
+			return nil, err
+		}
+		drivers = append(drivers, &d)
+	}
+
+	return drivers, nil
+}
+
+func (r *mongoDriverRepository) FindByParams(
+	page, pageSize *int,
+	ctx context.Context,
+) ([]*entities.Driver, error) {
+
+	filter := bson.M{}
+
+	findOptions := options.Find()
+
 	if page != nil && pageSize != nil {
-		findOptions.SetSkip(int64((*page - 1) * *pageSize))
-		findOptions.SetLimit(int64(*pageSize))
+		skip := int64((*page - 1) * *pageSize)
+		limit := int64(*pageSize)
+		findOptions.SetSkip(skip)
+		findOptions.SetLimit(limit)
 	}
 
 	cursor, err := r.collection.Find(ctx, filter, findOptions)

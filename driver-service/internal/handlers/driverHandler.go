@@ -23,10 +23,26 @@ func NewDriverHandler(service *services.DriverService) *Driver {
 // GET /drivers?page=1&pageSize=20
 // --------------------
 func (h *Driver) ListDrivers(ctx *gin.Context) {
-	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
-	pageSize, _ := strconv.Atoi(ctx.DefaultQuery("pageSize", "20"))
+	var pagePtr *int
+	var pageSizePtr *int
 
-	drivers, err := h.service.ListDrivers(page, pageSize, ctx)
+	// page var mı?
+	if pageStr, exists := ctx.GetQuery("page"); exists {
+		pageVal, err := strconv.Atoi(pageStr)
+		if err == nil {
+			pagePtr = &pageVal
+		}
+	}
+
+	// pageSize var mı?
+	if pageSizeStr, exists := ctx.GetQuery("pageSize"); exists {
+		pageSizeVal, err := strconv.Atoi(pageSizeStr)
+		if err == nil {
+			pageSizePtr = &pageSizeVal
+		}
+	}
+
+	drivers, err := h.service.ListDrivers(pagePtr, pageSizePtr, ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

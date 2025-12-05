@@ -1,0 +1,14 @@
+# Configuration for GoFile API Gateway
+
+rate_limit_window: 10s  # Adjust the rate limit window as needed
+rate_limit_count: 100 # Adjust the rate of requests allowed per window
+
+# Service registration (replace with your actual service URLs)
+services:
+  driver:
+    base_url: http://localhost:8081 # Base URL for the driver service (Assumed 8083 to avoid conflict with gateway 8080)
+    routes:
+      - path: /drivers
+      - path: /drivers/nearby
+      - path: /drivers/{id}
+     
