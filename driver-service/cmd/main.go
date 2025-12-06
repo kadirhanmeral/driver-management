@@ -9,32 +9,32 @@ import (
 	"github.com/kadirhanmeral/driver-management/configs"
 	"github.com/kadirhanmeral/driver-management/internal/handlers"
 	"github.com/kadirhanmeral/driver-management/internal/repository"
-	services "github.com/kadirhanmeral/driver-management/internal/services"
 	"github.com/kadirhanmeral/driver-management/server"
-	routes "github.com/kadirhanmeral/driver-management/server/router"
 	"github.com/rs/zerolog"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	services "github.com/kadirhanmeral/driver-management/internal/services"
+	routes "github.com/kadirhanmeral/driver-management/server/router"
 )
 
+// @title           Driver Service API
+// @version         1.0
+// @description     API Documentation for Driver Service
+
+// @host      localhost:8080
+// @BasePath  /
+
 func main() {
-	// Logger initialization
+
 	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
 
-	// Load configuration
 	cfg := configs.NewConfig()
-
-	// MongoDB client settings
-	clientOpts := options.Client().ApplyURI(cfg.Database.URI)
-	client, err := mongo.NewClient(clientOpts)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("Failed to create Mongo client")
-	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	err = client.Connect(ctx)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(cfg.Database.URI))
 	if err != nil {
 		logger.Fatal().Err(err).Msg("Failed to connect to Mongo")
 	}
@@ -45,22 +45,16 @@ func main() {
 		}
 	}()
 
-	// Repository creation
 	driverRepo := repository.NewDriverRepository(client, cfg.Database.Database, "drivers")
 
-	// Service creation
 	driverService := services.NewDriverService(driverRepo)
 
-	// Handler creation
 	driverHandler := handlers.NewDriverHandler(driverService)
 
-	// Gin router
 	router := gin.Default()
 
-	// Routes
 	routes.RegisterDriverEndpoints(router, driverHandler)
 
-	// Server initialization and start
 	srv := server.NewServer(logger, router, cfg)
 	srv.Serve()
 }

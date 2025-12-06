@@ -12,7 +12,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// DriverRepository interface
 type DriverRepository interface {
 	Create(driver entities.Driver, ctx context.Context) (primitive.ObjectID, error)
 	FindByParamsNearby(minLat, maxLat, minLon, maxLon *float64, taxiType *string, ctx context.Context) ([]*entities.Driver, error)
@@ -22,19 +21,16 @@ type DriverRepository interface {
 	Delete(id primitive.ObjectID, ctx context.Context) (int64, error)
 }
 
-// MongoDriverRepository struct
 type mongoDriverRepository struct {
 	collection *mongo.Collection
 }
 
-// NewDriverRepository creates a new repository
 func NewDriverRepository(client *mongo.Client, dbName, collectionName string) DriverRepository {
 	return &mongoDriverRepository{
 		collection: client.Database(dbName).Collection(collectionName),
 	}
 }
 
-// Create adds a new driver
 func (r *mongoDriverRepository) Create(driver entities.Driver, ctx context.Context) (primitive.ObjectID, error) {
 	driver.CreatedAt = time.Now().UTC()
 	driver.UpdatedAt = time.Now().UTC()
@@ -45,7 +41,6 @@ func (r *mongoDriverRepository) Create(driver entities.Driver, ctx context.Conte
 	return result.InsertedID.(primitive.ObjectID), nil
 }
 
-// FindByParams finds drivers based on location and taxi type with pagination
 func (r *mongoDriverRepository) FindByParamsNearby(
 	minLat, maxLat, minLon, maxLon *float64,
 	taxiType *string,
@@ -54,7 +49,6 @@ func (r *mongoDriverRepository) FindByParamsNearby(
 
 	filter := bson.M{}
 
-	// Lat filters
 	if minLat != nil || maxLat != nil {
 		latFilter := bson.M{}
 		if minLat != nil {
@@ -66,7 +60,6 @@ func (r *mongoDriverRepository) FindByParamsNearby(
 		filter["location.lat"] = latFilter
 	}
 
-	// Lon filters
 	if minLon != nil || maxLon != nil {
 		lonFilter := bson.M{}
 		if minLon != nil {
@@ -78,12 +71,10 @@ func (r *mongoDriverRepository) FindByParamsNearby(
 		filter["location.lon"] = lonFilter
 	}
 
-	// TaxiType filter
 	if taxiType != nil && *taxiType != "" {
 		filter["taxiType"] = *taxiType
 	}
 
-	// Projection
 	projection := bson.M{
 		"firstName": 1,
 		"lastName":  1,
@@ -93,7 +84,6 @@ func (r *mongoDriverRepository) FindByParamsNearby(
 
 	findOptions := options.Find()
 
-	// Projection set
 	findOptions.SetProjection(projection)
 
 	cursor, err := r.collection.Find(ctx, filter, findOptions)
@@ -148,7 +138,6 @@ func (r *mongoDriverRepository) FindByParams(
 	return drivers, nil
 }
 
-// GetByID retrieves a single driver by ID
 func (r *mongoDriverRepository) GetByID(id primitive.ObjectID, ctx context.Context) (*entities.Driver, error) {
 	var driver entities.Driver
 	err := r.collection.FindOne(ctx, bson.M{"_id": id}).Decode(&driver)
@@ -158,13 +147,11 @@ func (r *mongoDriverRepository) GetByID(id primitive.ObjectID, ctx context.Conte
 	return &driver, nil
 }
 
-// Update modifies an existing driver
 func (r *mongoDriverRepository) Update(id primitive.ObjectID, update bson.M, ctx context.Context) error {
 	_, err := r.collection.UpdateByID(ctx, id, bson.M{"$set": update})
 	return err
 }
 
-// Delete removes a driver
 func (r *mongoDriverRepository) Delete(id primitive.ObjectID, ctx context.Context) (int64, error) {
 	result, err := r.collection.DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {

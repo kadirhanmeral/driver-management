@@ -17,20 +17,34 @@ type Service struct {
 }
 
 type Config struct {
-	RateLimitWindow time.Duration      `mapstructure:"rate_limit_window"`
-	RateLimitCount  int                `mapstructure:"rate_limit_count"`
-	Services        map[string]Service `mapstructure:"services"`
+	RateLimitWindow    time.Duration      `mapstructure:"rate_limit_window"`
+	RateLimitCount     int                `mapstructure:"rate_limit_count"`
+	Services           map[string]Service `mapstructure:"services"`
+	JWTSecretKey       string             `mapstructure:"JWT_SECRET_KEY"`
+	APIKey             string             `mapstructure:"API_KEY"`
+	ServicePort        string             `mapstructure:"SERVICE_PORT"`
+	Env                string             `mapstructure:"ENV"`
+	ElasticsearchURL   string             `mapstructure:"ELASTICSEARCH_URL"`
+	ElasticsearchIndex string             `mapstructure:"ELASTICSEARCH_INDEX"`
 }
 
 func LoadConfig() (*Config, error) {
-	viper.SetConfigType("yaml")   // Set configuration file format (replace as needed)
-	viper.SetConfigName("config") // Set configuration file name
-	viper.AddConfigPath(".")      // Search for config file in current directory
+	viper.SetConfigType("yaml")
+	viper.SetConfigName("config")
+	viper.AddConfigPath(".")
 
-	err := viper.ReadInConfig()
+	viper.SetConfigFile(".env")
+	viper.SetConfigType("env")
+	viper.MergeInConfig()
+
+	viper.SetConfigFile("config.yaml")
+	viper.SetConfigType("yaml")
+	err := viper.MergeInConfig()
 	if err != nil {
 		return nil, fmt.Errorf("error reading config file: %w", err)
 	}
+
+	viper.AutomaticEnv()
 
 	var config Config
 	err = viper.Unmarshal(&config)

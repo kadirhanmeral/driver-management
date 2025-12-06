@@ -23,9 +23,8 @@ type MongoConfig struct {
 }
 
 func NewConfig() *Config {
-	err := godotenv.Load("configs/dev.env")
+	err := godotenv.Load(".env")
 	if err != nil {
-		// Don't panic here, just log or ignore if using system envs
 		fmt.Println("Warning: Error loading .env file")
 	}
 
@@ -33,28 +32,20 @@ func NewConfig() *Config {
 
 	return &Config{
 		Server: ServerConfig{
-			Address: getEnvOrDefault("SERVER_ADDRESS", ":8081"),
+			Address: os.Getenv("SERVER_ADDRESS"),
 		},
 		Database: MongoConfig{
 			URI:      mongoURI,
-			Database: getEnvOrDefault("MONGO_DB_NAME", "driverdb"),
+			Database: os.Getenv("MONGO_DB_NAME"),
 		},
 	}
 }
 
-func getEnvOrDefault(key, defaultValue string) string {
-	value := os.Getenv(key)
-	if value == "" {
-		return defaultValue
-	}
-	return value
-}
-
 func buildMongoURI() string {
-	host := getEnvOrDefault("MONGO_HOST", "localhost")
-	port := getEnvOrDefault("MONGO_PORT", "27017")
-	user := getEnvOrDefault("MONGO_USER", "root")
-	pass := getEnvOrDefault("MONGO_PASS", "password")
+	host := os.Getenv("MONGO_HOST")
+	port := os.Getenv("MONGO_PORT")
+	user := os.Getenv("MONGO_USER")
+	pass := os.Getenv("MONGO_PASS")
 
 	if user != "" && pass != "" {
 		return fmt.Sprintf(

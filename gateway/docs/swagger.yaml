@@ -1,0 +1,51 @@
+basePath: /
+definitions:
+  handlers.AuthDTO:
+    properties:
+      apiKey:
+        type: string
+    required:
+    - apiKey
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  title: API Gateway
+  version: "1.0"
+paths:
+  /auth/token:
+    post:
+      consumes:
+      - application/json
+      description: Get a JWT token by providing a valid API key
+      parameters:
+      - description: Get Auth Token
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AuthDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get JWT Token
+      tags:
+      - auth
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

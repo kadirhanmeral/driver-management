@@ -1,0 +1,353 @@
+basePath: /
+definitions:
+  dtos.CreateDriverDTO:
+    properties:
+      carBrand:
+        maxLength: 30
+        minLength: 2
+        type: string
+      carModel:
+        maxLength: 30
+        minLength: 1
+        type: string
+      firstName:
+        maxLength: 50
+        minLength: 2
+        type: string
+      lastName:
+        maxLength: 50
+        minLength: 2
+        type: string
+      lat:
+        maximum: 90
+        minimum: -90
+        type: number
+      lon:
+        maximum: 180
+        minimum: -180
+        type: number
+      plate:
+        type: string
+      taxiType:
+        enum:
+        - sari
+        - siyah
+        type: string
+    required:
+    - carBrand
+    - carModel
+    - firstName
+    - lastName
+    - lat
+    - lon
+    - plate
+    - taxiType
+    type: object
+  dtos.DriverResponseDTO:
+    properties:
+      carBrand:
+        type: string
+      carModel:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: string
+      lastName:
+        type: string
+      lat:
+        type: number
+      lon:
+        type: number
+      plate:
+        type: string
+      taxiType:
+        type: string
+    type: object
+  dtos.DriverResponseNearbyDTO:
+    properties:
+      carBrand:
+        type: string
+      distanceKm:
+        type: number
+      firstName:
+        type: string
+      lastName:
+        type: string
+      plate:
+        type: string
+    type: object
+  dtos.UpdateDriverDTO:
+    properties:
+      carBrand:
+        maxLength: 30
+        minLength: 2
+        type: string
+      carModel:
+        maxLength: 30
+        minLength: 1
+        type: string
+      firstName:
+        maxLength: 50
+        minLength: 2
+        type: string
+      lastName:
+        maxLength: 50
+        minLength: 2
+        type: string
+      lat:
+        maximum: 90
+        minimum: -90
+        type: number
+      lon:
+        maximum: 180
+        minimum: -180
+        type: number
+      plate:
+        type: string
+      taxiType:
+        enum:
+        - sari
+        - siyah
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API Documentation for Driver Service
+  title: Driver Service API
+  version: "1.0"
+paths:
+  /drivers:
+    get:
+      consumes:
+      - application/json
+      description: Get all drivers with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.DriverResponseDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List drivers
+      tags:
+      - drivers
+    post:
+      consumes:
+      - application/json
+      description: Create a new driver with the input payload
+      parameters:
+      - description: Create Driver
+        in: body
+        name: driver
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateDriverDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new driver
+      tags:
+      - drivers
+  /drivers/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a driver by ID
+      parameters:
+      - description: Driver ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a driver
+      tags:
+      - drivers
+    get:
+      consumes:
+      - application/json
+      description: Get a driver by ID
+      parameters:
+      - description: Driver ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dtos.DriverResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a driver
+      tags:
+      - drivers
+    patch:
+      consumes:
+      - application/json
+      description: Update a driver by ID
+      parameters:
+      - description: Driver ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Driver
+        in: body
+        name: driver
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateDriverDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a driver
+      tags:
+      - drivers
+  /drivers/nearby:
+    get:
+      consumes:
+      - application/json
+      description: Get drivers within 6 km of a location
+      parameters:
+      - description: Latitude
+        in: query
+        name: lat
+        required: true
+        type: number
+      - description: Longitude
+        in: query
+        name: lon
+        required: true
+        type: number
+      - description: Taxi Type
+        in: query
+        name: taxiType
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dtos.DriverResponseNearbyDTO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List nearby drivers
+      tags:
+      - drivers
+swagger: "2.0"
