@@ -76,6 +76,20 @@ Docker and Docker Compose must be installed to run the project in your local env
     ```
     This command will start up MongoDB, Elasticsearch, Kibana, the Driver Service, and the Gateway services.
 
+3. (Optional) **Create Dummy Data:**  
+   If you want to generate dummy data using the predefined `drivers.json` file, you can use the command below. Make sure the `jq` tool is installed on your device.
+    ```bash
+    TOKEN=$(curl -s -X POST http://localhost:8080/auth/token \
+     -H "Content-Type: application/json" \
+     -d '{"apiKey": "gw_sk_kUpmZQpevjWzX0LEOfO3fEpilsX2C7bc"}' | jq -r '.token')
+    jq -c '.[]' drivers.json | while read driver; do
+     curl -s -X POST http://localhost:8080/drivers \
+       -H "Content-Type: application/json" \
+       -H "Authorization: Bearer $TOKEN" \
+       -d "$driver"
+    done
+    ```
+
 ## Service Endpoints
 
 ### Gateway (Port: 8080)
