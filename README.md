@@ -84,6 +84,7 @@ The Gateway service runs at `http://localhost:8080`.
 
 * **Swagger UI:** `http://localhost:8080/swagger/index.html`
     * *Note: This UI integrates the Driver Service's documentation, allowing you to test endpoints directly through the Gateway.*
+    * *⚠️ For development purposes, you can send requests directly to http://localhost:8081/swagger/index.html or use Postman. However, in a production scenario, requests should go through the gateway.*
 * **Auth Token:** `POST /auth/token` (To obtain a JWT token using an API Key)
 
 ### Driver Service (Port: 8081)
